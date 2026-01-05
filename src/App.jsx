@@ -299,6 +299,17 @@ export default function PassportApp() {
     }
   };
 
+  const getPresetAspectRatio = (presetId) => {
+    const preset = SIZE_PRESETS.find((p) => p.id === presetId);
+    if (!preset) return 3 / 4;
+    const nums = preset.label.match(/[\d.]+/g);
+    if (!nums || nums.length < 2) return 3 / 4;
+    const w = parseFloat(nums[0]);
+    const h = parseFloat(nums[1]);
+    if (!w || !h) return 3 / 4;
+    return w / h;
+  };
+
   const handleServiceSelect = (service, targetView = 'capture', mode = 'camera', autoUpload = false) => {
     setSelectedService(service);
     setSizePresetId(service?.sizePresetId || getDefaultPresetForService(service?.id));
@@ -825,12 +836,14 @@ export default function PassportApp() {
                   <button onClick={switchToCamera} className="text-sm text-blue-600 hover:text-blue-800 underline">
                     Switch to live camera
                   </button>
-                  <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileUpload} />
                 </div>
                 {cameraError ? <p className="text-xs text-red-600 mt-4">{cameraError}</p> : null}
               </div>
             )}
           </div>
+
+          {/* Hidden upload input stays mounted for both modes */}
+          <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileUpload} />
 
           <div className="mt-8 bg-blue-50 p-4 rounded-lg flex items-start space-x-3">
             <AlertCircle className="h-6 w-6 text-blue-600 flex-shrink-0" />
@@ -872,7 +885,10 @@ export default function PassportApp() {
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-xl font-bold text-slate-900">Edit Photo</h2>
             </div>
-            <div className="bg-white rounded-2xl shadow-lg p-2 overflow-hidden relative aspect-[3/4] flex items-center justify-center">
+            <div
+              className="bg-white rounded-2xl shadow-lg p-2 overflow-hidden relative flex items-center justify-center"
+              style={{ aspectRatio: getPresetAspectRatio(sizePresetId || getDefaultPresetForService(selectedService?.id)) }}
+            >
               {processing ? (
                 <div className="absolute inset-0 bg-white/90 z-20 flex flex-col items-center justify-center text-center p-6">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
@@ -1016,7 +1032,6 @@ export default function PassportApp() {
                 <input
                   value={countryQuery}
                   onChange={(e) => setCountryQuery(e.target.value)}
-                  onInput={(e) => setCountryQuery(e.target.value)}
                   placeholder="Type a country, e.g. Spain"
                   className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                 />
