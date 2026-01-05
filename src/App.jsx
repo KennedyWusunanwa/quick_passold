@@ -21,11 +21,195 @@ import {
  * MOCK DATA & CONSTANTS
  */
 const SERVICES = [
-  { id: 'us-passport', name: 'US Passport Photo', price: 14.99, type: 'Digital + Print', desc: '2x2 inches, White Background' },
-  { id: 'uk-passport', name: 'UK Passport Photo', price: 12.99, type: 'Digital Code', desc: '35x45mm, Light Grey Background' },
-  { id: 'eu-visa', name: 'Schengen Visa', price: 12.99, type: 'Digital', desc: '35x45mm, White Background' },
-  { id: 'jp-visa', name: 'Japan Visa', price: 14.99, type: 'Digital', desc: '45x45mm, White Background' },
+  { id: 'us-passport', name: 'US Passport Photo', price: 14.99, type: 'Digital + Print', desc: '2x2 inches, White Background', sizePresetId: '2x2' },
+  { id: 'uk-passport', name: 'UK Passport Photo', price: 12.99, type: 'Digital Code', desc: '35x45mm, Light Grey Background', sizePresetId: '35x45' },
+  { id: 'eu-visa', name: 'Schengen Visa', price: 12.99, type: 'Digital', desc: '35x45mm, White Background', sizePresetId: '35x45' },
+  { id: 'jp-visa', name: 'Japan Visa', price: 14.99, type: 'Digital', desc: '45x45mm, White Background', sizePresetId: '45x45' },
 ];
+
+// Country-driven passport size presets
+const COUNTRY_FLAGS = {
+  Afghanistan: '🇦🇫',
+  Algeria: '🇩🇿',
+  Argentina: '🇦🇷',
+  Australia: '🇦🇺',
+  Austria: '🇦🇹',
+  Bahrain: '🇧🇭',
+  Bangladesh: '🇧🇩',
+  Belarus: '🇧🇾',
+  Belgium: '🇧🇪',
+  Benin: '🇧🇯',
+  Bolivia: '🇧🇴',
+  Botswana: '🇧🇼',
+  Bulgaria: '🇧🇬',
+  'Burkina Faso': '🇧🇫',
+  Cambodia: '🇰🇭',
+  Cameroon: '🇨🇲',
+  Canada: '🇨🇦',
+  China: '🇨🇳',
+  'Czech Republic': '🇨🇿',
+  Cyprus: '🇨🇾',
+  Croatia: '🇭🇷',
+  Denmark: '🇩🇰',
+  Djibouti: '🇩🇯',
+  Egypt: '🇪🇬',
+  Estonia: '🇪🇪',
+  Eswatini: '🇸🇿',
+  Ethiopia: '🇪🇹',
+  Finland: '🇫🇮',
+  France: '🇫🇷',
+  Gambia: '🇬🇲',
+  Germany: '🇩🇪',
+  Ghana: '🇬🇭',
+  Greece: '🇬🇷',
+  'Hong Kong': '🇭🇰',
+  Hungary: '🇭🇺',
+  Iceland: '🇮🇸',
+  India: '🇮🇳',
+  Indonesia: '🇮🇩',
+  Iraq: '🇮🇶',
+  Ireland: '🇮🇪',
+  Israel: '🇮🇱',
+  Italy: '🇮🇹',
+  'Ivory Coast': '🇨🇮',
+  Japan: '🇯🇵',
+  Jordan: '🇯🇴',
+  Kazakhstan: '🇰🇿',
+  Kenya: '🇰🇪',
+  Kuwait: '🇰🇼',
+  Kyrgyzstan: '🇰🇬',
+  Laos: '🇱🇦',
+  Latvia: '🇱🇻',
+  Lesotho: '🇱🇸',
+  Liberia: '🇱🇷',
+  Lithuania: '🇱🇹',
+  Luxembourg: '🇱🇺',
+  Macau: '🇲🇴',
+  Malaysia: '🇲🇾',
+  Mali: '🇲🇱',
+  Malta: '🇲🇹',
+  Morocco: '🇲🇦',
+  Myanmar: '🇲🇲',
+  Namibia: '🇳🇦',
+  Nepal: '🇳🇵',
+  Netherlands: '🇳🇱',
+  'New Zealand': '🇳🇿',
+  Niger: '🇳🇪',
+  Nigeria: '🇳🇬',
+  Norway: '🇳🇴',
+  Pakistan: '🇵🇰',
+  Philippines: '🇵🇭',
+  Poland: '🇵🇱',
+  Portugal: '🇵🇹',
+  Qatar: '🇶🇦',
+  Romania: '🇷🇴',
+  Russia: '🇷🇺',
+  Rwanda: '🇷🇼',
+  'Saudi Arabia': '🇸🇦',
+  Senegal: '🇸🇳',
+  Singapore: '🇸🇬',
+  Slovakia: '🇸🇰',
+  Slovenia: '🇸🇮',
+  Somalia: '🇸🇴',
+  'South Africa': '🇿🇦',
+  'South Korea': '🇰🇷',
+  Spain: '🇪🇸',
+  Sudan: '🇸🇩',
+  'South Sudan': '🇸🇸',
+  'Sri Lanka': '🇱🇰',
+  Sweden: '🇸🇪',
+  Switzerland: '🇨🇭',
+  Tajikistan: '🇹🇯',
+  Thailand: '🇹🇭',
+  Togo: '🇹🇬',
+  Tunisia: '🇹🇳',
+  Turkey: '🇹🇷',
+  Turkmenistan: '🇹🇲',
+  Uganda: '🇺🇬',
+  Ukraine: '🇺🇦',
+  UK: '🇬🇧',
+  'United Kingdom': '🇬🇧',
+  'United States': '🇺🇸',
+  Uzbekistan: '🇺🇿',
+  Vietnam: '🇻🇳',
+  Zambia: '🇿🇲',
+  Zimbabwe: '🇿🇼',
+};
+
+const getFlag = (name) => {
+  const base = name.split(' (')[0].trim();
+  return COUNTRY_FLAGS[base] || COUNTRY_FLAGS[base.split(' ')[0]] || '🏳️';
+};
+
+const SIZE_PRESETS = [
+  {
+    id: '35x45',
+    label: '35 x 45 mm',
+    description: 'Most common global standard',
+    countries: [
+      'UK', 'Germany', 'France', 'Italy', 'Spain (passport often 30x40, visa 35x45)', 'Netherlands', 'Belgium', 'Austria', 'Switzerland', 'Portugal', 'Poland', 'Czech Republic', 'Slovakia', 'Hungary', 'Romania', 'Bulgaria', 'Croatia', 'Slovenia', 'Lithuania (some passports 40x60)', 'Latvia', 'Estonia', 'Finland', 'Sweden', 'Norway', 'Denmark', 'Iceland', 'Ireland', 'Greece (passport often 40x60)', 'Cyprus', 'Malta', 'Luxembourg',
+      'Ghana', 'Nigeria', 'Kenya', 'Uganda (sometimes 51x51)', 'Rwanda', 'South Africa', 'Zimbabwe', 'Zambia', 'Botswana', 'Namibia', 'Lesotho', 'Eswatini', 'Senegal', 'Ivory Coast', 'Cameroon', 'Benin', 'Togo', 'Burkina Faso', 'Mali', 'Niger', 'Guinea', 'Sierra Leone', 'Liberia', 'Gambia', 'Morocco', 'Tunisia', 'Algeria', 'Egypt', 'Sudan', 'South Sudan',
+      'Japan', 'South Korea', 'China (33x48 variant)', 'Indonesia', 'Malaysia', 'Singapore', 'Philippines', 'Thailand', 'Cambodia', 'Laos', 'Myanmar', 'Sri Lanka', 'Bangladesh', 'Nepal', 'Pakistan', 'Afghanistan', 'Kazakhstan', 'Uzbekistan', 'Kyrgyzstan', 'Tajikistan',
+      'Australia', 'New Zealand',
+    ],
+  },
+  {
+    id: '2x2',
+    label: '2 x 2 in (51 x 51 mm)',
+    description: 'Square format - Americas and US aligned',
+    countries: ['United States', 'Canada (50x70 official but 2x2 often accepted)', 'Uganda (some embassies)', 'Saudi Arabia', 'Jordan', 'Iraq', 'Kuwait', 'Qatar (some visas)', 'Bahrain'],
+  },
+  {
+    id: '50x70',
+    label: '50 x 70 mm',
+    description: 'Canada passport and India print option',
+    countries: ['Canada (passport only)', 'India (passport print option)'],
+  },
+  {
+    id: '40x60',
+    label: '40 x 60 mm',
+    description: 'Eastern Europe and Southeast Asia variants',
+    countries: ['Greece', 'Lithuania', 'Vietnam', 'Russia', 'Ukraine', 'Belarus'],
+  },
+  {
+    id: '40x50',
+    label: '40 x 50 mm',
+    description: 'Hong Kong and Macau',
+    countries: ['Hong Kong', 'Macau'],
+  },
+  {
+    id: '30x40',
+    label: '30 x 40 mm',
+    description: 'Spain and some legacy systems',
+    countries: ['Spain (passport)', 'Italy (legacy)', 'Ethiopia', 'Somalia'],
+  },
+  {
+    id: '35x35',
+    label: '35 x 35 mm',
+    description: 'Square and smaller',
+    countries: ['India (some passport offices)', 'Djibouti'],
+  },
+  {
+    id: '33x48',
+    label: '33 x 48 mm',
+    description: 'China passport and visas',
+    countries: ['China'],
+  },
+  {
+    id: '45x45',
+    label: '45 x 45 mm',
+    description: 'Regional South America',
+    countries: ['Argentina (some provincial systems)', 'Bolivia'],
+  },
+  {
+    id: '50x60',
+    label: '50 x 60 mm',
+    description: 'Turkey and Turkmenistan',
+    countries: ['Turkey', 'Turkmenistan'],
+  },
+];
+
+const MULTISIZE_COUNTRIES = ['India', 'Uganda', 'Pakistan', 'Bangladesh', 'Nigeria'];
 
 /**
  * MAIN APP COMPONENT
@@ -52,10 +236,14 @@ export default function PassportApp() {
 
   const [currentPhoto, setCurrentPhoto] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
+  const [sizePresetId, setSizePresetId] = useState('35x45');
+  const [countryQuery, setCountryQuery] = useState('');
   const [lastOrderId, setLastOrderId] = useState(null);
+  const [captureMode, setCaptureMode] = useState('camera'); // camera | upload
+  const [pendingUploadPrompt, setPendingUploadPrompt] = useState(false);
 
   // Editor State
-  const [editSettings, setEditSettings] = useState({ zoom: 1, rotate: 0, brightness: 100 });
+  const [editSettings, setEditSettings] = useState({ zoom: 1, rotate: 0, brightness: 100, offsetX: 0, offsetY: 0 });
   const [processing, setProcessing] = useState(false);
   const [compliancePassed, setCompliancePassed] = useState(false);
 
@@ -86,7 +274,7 @@ export default function PassportApp() {
       setProcessing(true);
       setCompliancePassed(false);
       // Reset settings when entering editor
-      setEditSettings({ zoom: 1, rotate: 0, brightness: 100 });
+      setEditSettings({ zoom: 1, rotate: 0, brightness: 100, offsetX: 0, offsetY: 0 });
 
       const timer = setTimeout(() => {
         setProcessing(false);
@@ -97,6 +285,34 @@ export default function PassportApp() {
   }, [view]);
 
   // --- HELPERS ---
+  const getDefaultPresetForService = (serviceId) => {
+    switch (serviceId) {
+      case 'us-passport':
+        return '2x2';
+      case 'uk-passport':
+      case 'eu-visa':
+        return '35x45';
+      case 'jp-visa':
+        return '45x45';
+      default:
+        return '35x45';
+    }
+  };
+
+  const handleServiceSelect = (service, targetView = 'capture', mode = 'camera', autoUpload = false) => {
+    setSelectedService(service);
+    setSizePresetId(service?.sizePresetId || getDefaultPresetForService(service?.id));
+    setCaptureMode(mode);
+    setPendingUploadPrompt(autoUpload && mode === 'upload');
+    navigate(targetView);
+  };
+
+  const goToCapture = (mode = 'camera', autoUpload = false) => {
+    setCaptureMode(mode);
+    setPendingUploadPrompt(autoUpload && mode === 'upload');
+    navigate('capture');
+  };
+
   const navigate = (target) => {
     window.scrollTo(0, 0);
     setView(target);
@@ -137,7 +353,7 @@ export default function PassportApp() {
         const cy = canvas.height / 2;
 
         // Apply transformations
-        ctx.translate(cx, cy);
+        ctx.translate(cx + editSettings.offsetX, cy + editSettings.offsetY);
         ctx.rotate((editSettings.rotate * Math.PI) / 180);
         ctx.scale(editSettings.zoom, editSettings.zoom);
         ctx.translate(-cx, -cy);
@@ -155,17 +371,25 @@ export default function PassportApp() {
   };
 
   const handleAddToCart = async () => {
-    if (!selectedService) return;
+    if (!selectedService || !currentPhoto) {
+      alert('Please capture or upload a photo first.');
+      return;
+    }
 
     // Apply the edits to the actual image data before adding to cart
     setProcessing(true);
     const processedPhoto = await generateProcessedImage();
     setProcessing(false);
 
+    const presetLabel = SIZE_PRESETS.find((preset) => preset.id === sizePresetId)?.label || '35 x 45 mm';
+
     setCart([...cart, {
       ...selectedService,
       photo: processedPhoto,
       id: Date.now() + Math.random(), // unique ID for cart item
+      sizePresetId,
+      sizeLabel: presetLabel,
+      countryHint: countryQuery || undefined,
     }]);
     navigate('cart');
   };
@@ -192,6 +416,14 @@ export default function PassportApp() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const formatFilename = (item, idx = 0) => {
+    const cleaned = (item?.sizeLabel || 'photo')
+      .replace(/[^a-z0-9]+/gi, '-')
+      .replace(/^-+|-+$/g, '')
+      .toLowerCase() || 'photo';
+    return `${cleaned}-quickpass-${idx + 1}.jpg`;
   };
 
   // --- VIEWS ---
@@ -264,13 +496,13 @@ export default function PassportApp() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <button
-                onClick={() => { setSelectedService(SERVICES[0]); navigate('capture'); }}
+                onClick={() => handleServiceSelect(SERVICES[0], 'capture', 'camera')}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center shadow-lg transition-all transform hover:scale-105"
               >
                 <Camera className="mr-2 h-5 w-5" /> Take Photo Now
               </button>
               <button
-                onClick={() => { setSelectedService(SERVICES[0]); navigate('capture'); }}
+                onClick={() => handleServiceSelect(SERVICES[0], 'capture', 'upload', true)}
                 className="bg-slate-800 hover:bg-slate-700 text-white px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center border border-slate-700 transition-all"
               >
                 <Upload className="mr-2 h-5 w-5" /> Upload Image
@@ -311,21 +543,82 @@ export default function PassportApp() {
           <h2 className="text-3xl font-bold text-center text-slate-900 mb-12">Choose Your Document Type</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {SERVICES.map((service) => (
-              <div key={service.id} className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 border border-slate-100 flex flex-col">
-                <div className="h-12 w-12 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 mb-4">
-                  <ImageIcon className="h-6 w-6" />
+              (() => {
+                const preset = SIZE_PRESETS.find((p) => p.id === (service.sizePresetId || getDefaultPresetForService(service.id))) || SIZE_PRESETS[0];
+                return (
+                  <div key={service.id} className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 border border-slate-100 flex flex-col">
+                    <div className="h-12 w-12 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 mb-4">
+                      <ImageIcon className="h-6 w-6" />
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-900 mb-1">{service.name}</h3>
+                    <p className="text-slate-500 text-sm mb-3">{service.desc}</p>
+                    <div className="mb-4">
+                      <div className="text-xs font-bold text-slate-700 uppercase mb-2">{preset.label} Countries</div>
+                      <div className="flex flex-wrap gap-2 max-h-28 overflow-y-auto">
+                        {preset.countries.map((country) => (
+                          <span key={country} className="text-[11px] bg-slate-100 text-slate-700 px-2 py-1 rounded-full border border-slate-200">
+                            {getFlag(country)} {country}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-100 gap-2">
+                      <span className="text-lg font-bold text-slate-900">${service.price}</span>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleServiceSelect(service, 'capture', 'camera')}
+                          className="text-blue-600 font-semibold hover:text-blue-800 text-sm flex items-center"
+                        >
+                          Take <ChevronRight className="h-4 w-4 ml-1" />
+                        </button>
+                        <button
+                          onClick={() => handleServiceSelect(service, 'capture', 'upload', true)}
+                          className="text-slate-600 font-semibold hover:text-slate-900 text-sm flex items-center"
+                        >
+                          Upload <ChevronRight className="h-4 w-4 ml-1" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing by Size */}
+      <section id="pricing" className="py-20 bg-white scroll-mt-16">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center text-slate-900 mb-12">Global Pricing by Size</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {SIZE_PRESETS.map((preset) => (
+              <div key={preset.id} className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-xl font-bold text-slate-900">{preset.label}</h3>
+                  <span className="text-xs text-slate-500">From $12.99</span>
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">{service.name}</h3>
-                <p className="text-slate-500 text-sm mb-4 flex-grow">{service.desc}</p>
-                <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-100">
-                  <span className="text-lg font-bold text-slate-900">${service.price}</span>
-                  <button
-                    onClick={() => { setSelectedService(service); navigate('capture'); }}
-                    className="text-blue-600 font-medium hover:text-blue-800 text-sm flex items-center"
-                  >
-                    Select <ChevronRight className="h-4 w-4 ml-1" />
-                  </button>
+                <p className="text-sm text-slate-600 mb-3">{preset.description}</p>
+                <div className="text-xs font-bold text-slate-700 uppercase mb-2">Countries</div>
+                <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto mb-4">
+                  {preset.countries.map((country) => (
+                    <span key={country} className="text-[11px] bg-slate-100 text-slate-700 px-2 py-1 rounded-full border border-slate-200">
+                      {getFlag(country)} {country}
+                    </span>
+                  ))}
                 </div>
+                <button
+                  onClick={() => handleServiceSelect({ ...SERVICES[0], sizePresetId: preset.id }, 'capture', 'camera')}
+                  className="mt-auto inline-flex items-center justify-center px-4 py-3 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700"
+                >
+                  Start with {preset.label}
+                </button>
+                <button
+                  onClick={() => handleServiceSelect({ ...SERVICES[0], sizePresetId: preset.id }, 'capture', 'upload', true)}
+                  className="mt-2 inline-flex items-center justify-center px-4 py-3 rounded-lg bg-white text-blue-700 border border-blue-200 text-sm font-semibold hover:bg-blue-50"
+                >
+                  Upload for {preset.label}
+                </button>
               </div>
             ))}
           </div>
@@ -366,30 +659,46 @@ export default function PassportApp() {
   const CaptureView = () => {
     const videoRef = useRef(null);
     const fileInputRef = useRef(null);
+    const streamRef = useRef(null);
     const [stream, setStream] = useState(null);
     const [cameraActive, setCameraActive] = useState(false);
+    const [cameraReady, setCameraReady] = useState(false);
+    const [cameraError, setCameraError] = useState('');
 
     const startCamera = async () => {
+      if (cameraActive || stream) return;
       try {
+        setCameraError('');
         const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        streamRef.current = mediaStream;
         setStream(mediaStream);
         setCameraActive(true);
-        if (videoRef.current) videoRef.current.srcObject = mediaStream;
       } catch (err) {
+        console.error('Camera permission issue', err);
+        setCameraError('Could not access camera. Please upload a photo instead.');
         alert('Could not access camera. Please upload a photo instead.');
       }
     };
 
     const stopCamera = () => {
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
-        setStream(null);
-        setCameraActive(false);
+      const activeStream = streamRef.current || stream;
+      if (activeStream) {
+        activeStream.getTracks().forEach((track) => track.stop());
       }
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
+      }
+      streamRef.current = null;
+      setStream(null);
+      setCameraReady(false);
+      setCameraActive(false);
     };
 
     const capturePhoto = () => {
-      if (!videoRef.current) return;
+      if (!videoRef.current || !cameraReady) {
+        alert('Camera is not ready yet. Wait for the live preview.');
+        return;
+      }
       const canvas = document.createElement('canvas');
       canvas.width = videoRef.current.videoWidth;
       canvas.height = videoRef.current.videoHeight;
@@ -401,19 +710,61 @@ export default function PassportApp() {
       navigate('editor');
     };
 
-    const handleFileUpload = (e) => {
-      const file = e.target.files[0];
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
       if (file) {
         const reader = new FileReader();
         reader.onloadend = () => {
           setCurrentPhoto(reader.result);
+          setSizePresetId((prev) => prev || getDefaultPresetForService(selectedService?.id));
           navigate('editor');
         };
         reader.readAsDataURL(file);
       }
+      setPendingUploadPrompt(false);
     };
 
-    useEffect(() => () => stopCamera(), []);
+    useEffect(() => {
+      if (stream && videoRef.current) {
+        const videoEl = videoRef.current;
+        const handleLoaded = () => {
+          videoEl.play().catch(() => {});
+          setCameraReady(true);
+        };
+        videoEl.srcObject = stream;
+        videoEl.addEventListener('loadedmetadata', handleLoaded);
+        return () => videoEl.removeEventListener('loadedmetadata', handleLoaded);
+      }
+      return undefined;
+    }, [stream]);
+
+    useEffect(() => {
+      if (captureMode === 'camera') {
+        startCamera();
+      } else {
+        stopCamera();
+      }
+      return () => stopCamera();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [captureMode]);
+
+    useEffect(() => {
+      if (captureMode === 'upload' && pendingUploadPrompt && fileInputRef.current) {
+        fileInputRef.current.click();
+        setPendingUploadPrompt(false);
+      } else if (captureMode !== 'upload' && pendingUploadPrompt) {
+        setPendingUploadPrompt(false);
+      }
+    }, [captureMode, pendingUploadPrompt]);
+
+    const switchToCamera = () => {
+      setPendingUploadPrompt(false);
+      setCaptureMode('camera');
+    };
+    const switchToUpload = () => {
+      setCaptureMode('upload');
+      setPendingUploadPrompt(true);
+    };
 
     return (
       <div className="min-h-screen bg-slate-50 pt-8 pb-20">
@@ -434,14 +785,24 @@ export default function PassportApp() {
               Keep head straight
             </div>
 
-            {cameraActive ? (
+            {captureMode === 'camera' && cameraActive ? (
               <div className="relative bg-black aspect-[3/4] flex items-center justify-center overflow-hidden">
                 <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover transform scale-x-[-1]" />
+                {!cameraReady && (
+                  <div className="absolute top-4 left-4 bg-black/60 text-white text-xs px-3 py-1 rounded-full">
+                    Starting camera...
+                  </div>
+                )}
                 {/* Face Guide Overlay */}
                 <div className="absolute inset-0 pointer-events-none border-[3px] border-white/30 rounded-[50%] w-[60%] h-[70%] top-[15%] left-[20%]"></div>
                 <div className="absolute bottom-8 left-0 right-0 flex justify-center z-30">
                   <button onClick={capturePhoto} className="h-16 w-16 bg-white rounded-full border-4 border-slate-300 flex items-center justify-center hover:scale-105 transition-transform">
                     <div className="h-12 w-12 bg-red-500 rounded-full"></div>
+                  </button>
+                </div>
+                <div className="absolute top-4 left-4 z-20">
+                  <button onClick={switchToUpload} className="text-xs bg-white/80 text-slate-800 px-3 py-1 rounded-full hover:bg-white">
+                    Upload instead
                   </button>
                 </div>
               </div>
@@ -455,14 +816,18 @@ export default function PassportApp() {
                   We'll automatically remove the background and crop it to compliance standards.
                 </p>
                 <div className="flex flex-col gap-4 w-full max-w-xs">
-                  <button onClick={startCamera} className="bg-blue-600 text-white w-full py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors flex items-center justify-center">
+                  <button onClick={() => { switchToCamera(); startCamera(); }} className="bg-blue-600 text-white w-full py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors flex items-center justify-center">
                     <Camera className="mr-2 h-5 w-5" /> Open Camera
                   </button>
-                  <button onClick={() => fileInputRef.current.click()} className="bg-white text-slate-700 border border-slate-300 w-full py-3 rounded-xl font-bold hover:bg-slate-50 transition-colors flex items-center justify-center">
+                  <button onClick={() => { switchToUpload(); fileInputRef.current?.click(); }} className="bg-white text-slate-700 border border-slate-300 w-full py-3 rounded-xl font-bold hover:bg-slate-50 transition-colors flex items-center justify-center">
                     <Upload className="mr-2 h-5 w-5" /> Upload File
+                  </button>
+                  <button onClick={switchToCamera} className="text-sm text-blue-600 hover:text-blue-800 underline">
+                    Switch to live camera
                   </button>
                   <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileUpload} />
                 </div>
+                {cameraError ? <p className="text-xs text-red-600 mt-4">{cameraError}</p> : null}
               </div>
             )}
           </div>
@@ -481,6 +846,22 @@ export default function PassportApp() {
     const updateSetting = (key, val) => {
       setEditSettings((prev) => ({ ...prev, [key]: val }));
     };
+    const updateSettingLive = (key) => (e) => {
+      const raw = e.target.value;
+      const parsed = key === 'zoom' ? parseFloat(raw) : parseInt(raw, 10);
+      updateSetting(key, parsed);
+    };
+    const selectedPreset = SIZE_PRESETS.find((preset) => preset.id === sizePresetId) || SIZE_PRESETS[0];
+    const normalizedQuery = countryQuery.trim().toLowerCase();
+    const matchingPreset = normalizedQuery
+      ? SIZE_PRESETS.find((preset) =>
+          preset.countries.some((c) => c.toLowerCase().includes(normalizedQuery)),
+        )
+      : null;
+    const matchedCountry = normalizedQuery && matchingPreset
+      ? matchingPreset.countries.find((c) => c.toLowerCase().includes(normalizedQuery))
+      : null;
+    const matchedFlag = matchedCountry ? getFlag(matchedCountry) : '';
 
     return (
       <div className="min-h-screen bg-slate-50 pt-8 pb-20">
@@ -506,7 +887,7 @@ export default function PassportApp() {
                   className="w-full h-full bg-cover bg-center transition-all duration-200"
                   style={{
                     backgroundImage: `url(${currentPhoto})`,
-                    transform: `scale(${editSettings.zoom}) rotate(${editSettings.rotate}deg)`,
+                    transform: `translate(${editSettings.offsetX}px, ${editSettings.offsetY}px) scale(${editSettings.zoom}) rotate(${editSettings.rotate}deg)`,
                     filter: `brightness(${editSettings.brightness}%)`,
                   }}
                 />
@@ -554,7 +935,8 @@ export default function PassportApp() {
                 <input
                   type="range" min="1" max="2" step="0.1"
                   value={editSettings.zoom}
-                  onChange={(e) => updateSetting('zoom', parseFloat(e.target.value))}
+                  onChange={updateSettingLive('zoom')}
+                  onInput={updateSettingLive('zoom')}
                   className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer"
                 />
               </div>
@@ -568,7 +950,8 @@ export default function PassportApp() {
                 <input
                   type="range" min="-45" max="45" step="1"
                   value={editSettings.rotate}
-                  onChange={(e) => updateSetting('rotate', parseInt(e.target.value, 10))}
+                  onChange={updateSettingLive('rotate')}
+                  onInput={updateSettingLive('rotate')}
                   className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer"
                 />
               </div>
@@ -582,9 +965,108 @@ export default function PassportApp() {
                 <input
                   type="range" min="50" max="150" step="5"
                   value={editSettings.brightness}
-                  onChange={(e) => updateSetting('brightness', parseInt(e.target.value, 10))}
+                  onChange={updateSettingLive('brightness')}
+                  onInput={updateSettingLive('brightness')}
                   className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer"
                 />
+              </div>
+
+              {/* Horizontal shift */}
+              <div className="mb-6">
+                <div className="flex justify-between mb-2">
+                  <label className="text-sm font-medium text-slate-700 flex items-center">Shift X</label>
+                  <span className="text-xs text-slate-500">{editSettings.offsetX}px</span>
+                </div>
+                <input
+                  type="range" min="-200" max="200" step="1"
+                  value={editSettings.offsetX}
+                  onChange={updateSettingLive('offsetX')}
+                  onInput={updateSettingLive('offsetX')}
+                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer"
+                />
+              </div>
+
+              {/* Vertical shift */}
+              <div className="mb-2">
+                <div className="flex justify-between mb-2">
+                  <label className="text-sm font-medium text-slate-700 flex items-center">Shift Y</label>
+                  <span className="text-xs text-slate-500">{editSettings.offsetY}px</span>
+                </div>
+                <input
+                  type="range" min="-200" max="200" step="1"
+                  value={editSettings.offsetY}
+                  onChange={updateSettingLive('offsetY')}
+                  onInput={updateSettingLive('offsetY')}
+                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer"
+                />
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="font-bold text-slate-900">Country preset</h3>
+                  <p className="text-sm text-slate-500">Pick the official passport size after you capture.</p>
+                </div>
+                <span className="text-[11px] text-slate-500">ICAO sizing</span>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium text-slate-700 block mb-2">Country (auto finds size)</label>
+                <input
+                  value={countryQuery}
+                  onChange={(e) => setCountryQuery(e.target.value)}
+                  onInput={(e) => setCountryQuery(e.target.value)}
+                  placeholder="Type a country, e.g. Spain"
+                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                />
+                {countryQuery ? (
+                  <div className="mt-2 text-xs text-slate-600 flex items-center justify-between">
+                    <span>
+                      {matchingPreset
+                        ? `${matchedFlag ? `${matchedFlag} ` : ''}${countryQuery.trim()} uses ${matchingPreset.label}`
+                        : 'No preset found. Pick a size below.'}
+                    </span>
+                    {matchingPreset && matchingPreset.id !== sizePresetId ? (
+                      <button
+                        onClick={() => setSizePresetId(matchingPreset.id)}
+                        className="text-blue-600 hover:text-blue-800 font-semibold"
+                      >
+                        Apply
+                      </button>
+                    ) : null}
+                  </div>
+                ) : null}
+              </div>
+
+              <div>
+                <label className="text-sm font-medium text-slate-700 block mb-2">Size preset</label>
+                <select
+                  value={sizePresetId}
+                  onChange={(e) => setSizePresetId(e.target.value)}
+                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                >
+                  {SIZE_PRESETS.map((preset) => (
+                    <option key={preset.id} value={preset.id}>
+                      {preset.label} — {preset.description}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <div className="text-xs font-bold text-slate-700 uppercase mb-2">Countries on this size</div>
+                <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+                  {selectedPreset?.countries.map((country) => (
+                    <span key={country} className="text-xs bg-slate-100 text-slate-700 px-2 py-1 rounded-full border border-slate-200">
+                      {getFlag(country)} {country}
+                    </span>
+                  ))}
+                </div>
+                <p className="text-xs text-slate-500 mt-3">
+                  Multi-size allowances:{' '}
+                  {MULTISIZE_COUNTRIES.map((c) => `${getFlag(c)} ${c}`).join(', ')} (check embassy rules).
+                </p>
               </div>
             </div>
 
@@ -596,7 +1078,7 @@ export default function PassportApp() {
               >
                 {processing ? 'Processing...' : 'Approve & Add to Cart'}
               </button>
-              <button onClick={() => navigate('capture')} className="text-slate-600 font-medium py-3 hover:text-slate-900">
+              <button onClick={() => goToCapture('camera')} className="text-slate-600 font-medium py-3 hover:text-slate-900">
                 Retake Photo
               </button>
             </div>
@@ -630,6 +1112,9 @@ export default function PassportApp() {
                     <div className="flex-grow">
                       <h3 className="font-bold text-slate-900">{item.name}</h3>
                       <p className="text-sm text-slate-500">{item.type}</p>
+                      {item.sizeLabel ? (
+                        <p className="text-xs text-slate-500 mt-1">Preset: {item.sizeLabel}</p>
+                      ) : null}
                     </div>
                     <div className="text-right">
                       <p className="font-bold text-slate-900">${item.price}</p>
@@ -678,12 +1163,13 @@ export default function PassportApp() {
       setLoading(true);
 
       const newOrderId = `ORD-${Math.floor(Math.random() * 10000)}`;
+      const orderItems = [...cart];
       const newOrder = {
         id: newOrderId,
         date: new Date().toISOString().split('T')[0],
         status: 'Completed',
         total: cart.reduce((sum, item) => sum + item.price, 0),
-        items: [...cart], // Save the items (including the photos)
+        items: orderItems, // Save the items (including the photos)
         service: cart[0]?.name + (cart.length > 1 ? ` + ${cart.length - 1} more` : ''),
       };
 
@@ -691,6 +1177,9 @@ export default function PassportApp() {
       setTimeout(() => {
         setOrders((prev) => [newOrder, ...prev]);
         setLastOrderId(newOrderId);
+        orderItems.forEach((item, idx) => {
+          if (item?.photo) downloadImage(item.photo, formatFilename(item, idx));
+        });
         setLoading(false);
         setCart([]); // Clear cart
         navigate('success');
@@ -714,7 +1203,7 @@ export default function PassportApp() {
             <form onSubmit={handlePay} className="p-6 space-y-6">
               <div className="space-y-4">
                 <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide">Contact Info</h3>
-                <input type="email" placeholder="Email Address" required className="w-full border border-slate-200 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" defaultValue={user?.email} />
+                <input type="email" placeholder="Email Address" required className="w-full border border-slate-200 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" defaultValue={user?.email || 'test@quickpass.com'} />
               </div>
 
               <div className="space-y-4">
@@ -725,10 +1214,10 @@ export default function PassportApp() {
                     ${cart.reduce((sum, item) => sum + item.price, 0).toFixed(2)}
                   </span>
                 </div>
-                <input type="text" placeholder="Card Number" required className="w-full border border-slate-200 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
+                <input type="text" placeholder="Card Number" required className="w-full border border-slate-200 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" defaultValue="4242 4242 4242 4242" />
                 <div className="grid grid-cols-2 gap-4">
-                  <input type="text" placeholder="MM / YY" required className="w-full border border-slate-200 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
-                  <input type="text" placeholder="CVC" required className="w-full border border-slate-200 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
+                  <input type="text" placeholder="MM / YY" required className="w-full border border-slate-200 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" defaultValue="12/34" />
+                  <input type="text" placeholder="CVC" required className="w-full border border-slate-200 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" defaultValue="123" />
                 </div>
               </div>
 
@@ -762,9 +1251,10 @@ export default function PassportApp() {
             <div key={idx} className="bg-slate-50 p-4 rounded-xl mb-4 border border-slate-100">
               <div className="flex items-center justify-between text-sm mb-2">
                 <span className="text-slate-600 font-medium">{item.name}</span>
+                {item.sizeLabel ? <span className="text-slate-500">Size: {item.sizeLabel}</span> : null}
               </div>
               <button
-                onClick={() => downloadImage(item.photo, `passport-photo-${idx}.jpg`)}
+                onClick={() => downloadImage(item.photo, formatFilename(item, idx))}
                 className="w-full bg-white border border-slate-300 text-slate-700 font-bold py-2 rounded-lg text-sm flex items-center justify-center hover:bg-slate-50"
               >
                 <Download className="h-4 w-4 mr-2" /> Download JPG
@@ -827,7 +1317,7 @@ export default function PassportApp() {
                         onClick={() => {
                           // Download first item of order for simplicity in list view
                           if (order.items && order.items[0]) {
-                            downloadImage(order.items[0].photo, `order-${order.id}.jpg`);
+                            downloadImage(order.items[0].photo, formatFilename(order.items[0], 0));
                           }
                         }}
                         className="text-blue-600 hover:text-blue-900 text-sm font-medium"
@@ -953,26 +1443,26 @@ export default function PassportApp() {
             <div>
               <h4 className="text-white font-bold mb-4">Services</h4>
               <ul className="space-y-2 text-sm">
-                <li>US Passport Photos</li>
-                <li>Schengen Visa</li>
-                <li>UK Passport</li>
-                <li>Digital Codes</li>
+                <li><button onClick={() => handleServiceSelect(SERVICES[0], 'capture', 'camera')} className="hover:text-white">US Passport Photo</button></li>
+                <li><button onClick={() => handleServiceSelect(SERVICES[2], 'capture', 'camera')} className="hover:text-white">Schengen Visa</button></li>
+                <li><button onClick={() => handleServiceSelect(SERVICES[1], 'capture', 'camera')} className="hover:text-white">UK Passport</button></li>
+                <li><button onClick={() => scrollToSection('pricing')} className="hover:text-white">All Sizes & Prices</button></li>
               </ul>
             </div>
             <div>
               <h4 className="text-white font-bold mb-4">Support</h4>
               <ul className="space-y-2 text-sm">
-                <li>Help Center</li>
-                <li>Photo Guidelines</li>
-                <li>Track Order</li>
-                <li>Refund Policy</li>
+                <li><button onClick={() => scrollToSection('how-it-works')} className="hover:text-white">How it Works</button></li>
+                <li><button onClick={() => goToCapture('camera')} className="hover:text-white">Take Photo</button></li>
+                <li><button onClick={() => goToCapture('upload', true)} className="hover:text-white">Upload Photo</button></li>
+                <li><button onClick={() => navigate('dashboard')} className="hover:text-white">Track Order</button></li>
               </ul>
             </div>
             <div>
               <h4 className="text-white font-bold mb-4">Legal</h4>
               <ul className="space-y-2 text-sm">
-                <li>Privacy Policy</li>
-                <li>Terms of Service</li>
+                <li><button className="hover:text-white" onClick={() => alert('Privacy Policy coming soon.')}>Privacy Policy</button></li>
+                <li><button className="hover:text-white" onClick={() => alert('Terms of Service coming soon.')}>Terms of Service</button></li>
               </ul>
             </div>
           </div>
