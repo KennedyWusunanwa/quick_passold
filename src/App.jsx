@@ -242,6 +242,22 @@ const COUNTRY_PRESET_MAP = (() => {
   return map;
 })();
 
+const COUNTRY_OPTIONS = (() => {
+  const options = [];
+  SIZE_PRESETS.forEach((preset) => {
+    preset.countries.forEach((country) => {
+      options.push({
+        country,
+        presetId: preset.id,
+        flag: getFlag(country),
+        key: normalizeCountry(country),
+        label: `${getFlag(country)} ${country} — ${preset.label}`,
+      });
+    });
+  });
+  return options;
+})();
+
 /**
  * MAIN APP COMPONENT
  */
@@ -902,11 +918,16 @@ export default function PassportApp() {
     ? matchingPreset.countries.find((c) => normalizeCountry(c) === normalizedQuery) || matchingPreset.countries[0]
     : null;
   const matchedFlag = matchedCountry ? getFlag(matchedCountry) : '';
+    const [showSuggestions, setShowSuggestions] = useState(false);
 
-  useEffect(() => {
-    if (matchingPreset && matchingPreset.id !== sizePresetId) {
-      setSizePresetId(matchingPreset.id);
-    }
+    const filteredSuggestions = countryQuery
+      ? COUNTRY_OPTIONS.filter((opt) => opt.key.includes(normalizeCountry(countryQuery))).slice(0, 8)
+      : COUNTRY_OPTIONS.slice(0, 8);
+
+    useEffect(() => {
+      if (matchingPreset && matchingPreset.id !== sizePresetId) {
+        setSizePresetId(matchingPreset.id);
+      }
   }, [matchingPreset, sizePresetId]);
 
     return (
@@ -1060,37 +1081,62 @@ export default function PassportApp() {
                 <span className="text-[11px] text-slate-500">ICAO sizing</span>
               </div>
 
-              <div>
+              <div className="relative">
                 <label className="text-sm font-medium text-slate-700 block mb-2">Country (auto finds size)</label>
                 <input
                   ref={countryInputRef}
                   value={countryQuery}
                   onChange={(e) => {
                     setCountryQuery(e.target.value);
-                    requestAnimationFrame(() => countryInputRef.current?.focus());
+                    setShowSuggestions(true);
                   }}
+                  onFocus={() => setShowSuggestions(true)}
+                  onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
                   autoComplete="off"
                   spellCheck={false}
                   placeholder="Type a country, e.g. Spain"
                   className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                 />
-                {countryQuery ? (
-                  <div className="mt-2 text-xs text-slate-600 flex items-center justify-between">
-                    <span>
-                      {matchingPreset
-                        ? `${matchedFlag ? `${matchedFlag} ` : ''}${countryQuery.trim()} uses ${matchingPreset.label}`
-                        : 'No preset found. Pick a size below.'}
-                    </span>
-                    {matchingPreset && matchingPreset.id !== sizePresetId ? (
+                {showSuggestions && filteredSuggestions.length > 0 && (
+                  <div className="absolute z-20 mt-1 w-full max-h-56 overflow-y-auto bg-white border border-slate-200 rounded-lg shadow-md text-sm">
+                    {filteredSuggestions.map((opt) => (
                       <button
-                        onClick={() => setSizePresetId(matchingPreset.id)}
-                        className="text-blue-600 hover:text-blue-800 font-semibold"
+                        key={`${opt.presetId}-${opt.country}`}
+                        className="w-full text-left px-3 py-2 hover:bg-blue-50 flex items-center justify-between"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => {
+                          setCountryQuery(opt.country);
+                          setSizePresetId(opt.presetId);
+                          setShowSuggestions(false);
+                          requestAnimationFrame(() => countryInputRef.current?.blur());
+                        }}
                       >
-                        Apply
+                        <span className="flex items-center gap-2">
+                          <span>{opt.flag}</span>
+                          <span>{opt.country}</span>
+                        </span>
+                        <span className="text-xs text-slate-500">{opt.presetId}</span>
                       </button>
-                    ) : null}
+                    ))}
                   </div>
-                ) : null}
+                )}
+                <div className="mt-2 text-xs text-slate-600 flex items-center justify-between">
+                  <span>
+                    {matchingPreset
+                      ? `${matchedFlag ? `${matchedFlag} ` : ''}${countryQuery.trim() || 'Auto'} uses ${matchingPreset.label}`
+                      : countryQuery
+                        ? 'No preset found. Pick a size below.'
+                        : 'Start typing to find your country.'}
+                  </span>
+                  {matchingPreset && matchingPreset.id !== sizePresetId ? (
+                    <button
+                      onClick={() => setSizePresetId(matchingPreset.id)}
+                      className="text-blue-600 hover:text-blue-800 font-semibold"
+                    >
+                      Apply
+                    </button>
+                  ) : null}
+                </div>
               </div>
 
               <div>
