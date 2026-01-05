@@ -211,6 +211,37 @@ const SIZE_PRESETS = [
 
 const MULTISIZE_COUNTRIES = ['India', 'Uganda', 'Pakistan', 'Bangladesh', 'Nigeria'];
 
+const normalizeCountry = (name = '') =>
+  name
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+
+const COUNTRY_PRESET_MAP = (() => {
+  const map = new Map();
+  SIZE_PRESETS.forEach((preset) => {
+    preset.countries.forEach((country) => {
+      const key = normalizeCountry(country);
+      if (key && !map.has(key)) map.set(key, preset.id);
+    });
+  });
+  // Helpful aliases
+  map.set('united states', '2x2');
+  map.set('usa', '2x2');
+  map.set('america', '2x2');
+  map.set('canada', '2x2');
+  map.set('united kingdom', '35x45');
+  map.set('great britain', '35x45');
+  map.set('england', '35x45');
+  map.set('uk', '35x45');
+  map.set('eu', '35x45');
+  map.set('europe', '35x45');
+  map.set('schengen', '35x45');
+  return map;
+})();
+
 /**
  * MAIN APP COMPONENT
  */
@@ -852,25 +883,24 @@ export default function PassportApp() {
     );
   };
   const EditorView = () => {
-    const updateSetting = (key, val) => {
-      setEditSettings((prev) => ({ ...prev, [key]: val }));
-    };
-    const updateSettingLive = (key) => (e) => {
-      const raw = e.target.value;
-      const parsed = key === 'zoom' ? parseFloat(raw) : parseInt(raw, 10);
-      updateSetting(key, parsed);
-    };
-    const selectedPreset = SIZE_PRESETS.find((preset) => preset.id === sizePresetId) || SIZE_PRESETS[0];
-    const normalizedQuery = countryQuery.trim().toLowerCase();
-    const matchingPreset = normalizedQuery
-      ? SIZE_PRESETS.find((preset) =>
-          preset.countries.some((c) => c.toLowerCase().includes(normalizedQuery)),
-        )
-      : null;
-    const matchedCountry = normalizedQuery && matchingPreset
-      ? matchingPreset.countries.find((c) => c.toLowerCase().includes(normalizedQuery))
-      : null;
-    const matchedFlag = matchedCountry ? getFlag(matchedCountry) : '';
+  const updateSetting = (key, val) => {
+    setEditSettings((prev) => ({ ...prev, [key]: val }));
+  };
+  const updateSettingLive = (key) => (e) => {
+    const raw = e.target.value;
+    const parsed = key === 'zoom' ? parseFloat(raw) : parseInt(raw, 10);
+    updateSetting(key, parsed);
+  };
+  const selectedPreset = SIZE_PRESETS.find((preset) => preset.id === sizePresetId) || SIZE_PRESETS[0];
+  const normalizedQuery = normalizeCountry(countryQuery);
+  const matchedPresetId = normalizedQuery ? COUNTRY_PRESET_MAP.get(normalizedQuery) : null;
+  const matchingPreset = matchedPresetId
+    ? SIZE_PRESETS.find((preset) => preset.id === matchedPresetId)
+    : null;
+  const matchedCountry = normalizedQuery && matchingPreset
+    ? matchingPreset.countries.find((c) => normalizeCountry(c) === normalizedQuery) || matchingPreset.countries[0]
+    : null;
+  const matchedFlag = matchedCountry ? getFlag(matchedCountry) : '';
 
     return (
       <div className="min-h-screen bg-slate-50 pt-8 pb-20">
