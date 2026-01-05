@@ -29,111 +29,111 @@ const SERVICES = [
 
 // Country-driven passport size presets
 const COUNTRY_FLAGS = {
-  Afghanistan: '🇦🇫',
-  Algeria: '🇩🇿',
-  Argentina: '🇦🇷',
-  Australia: '🇦🇺',
-  Austria: '🇦🇹',
-  Bahrain: '🇧🇭',
-  Bangladesh: '🇧🇩',
-  Belarus: '🇧🇾',
-  Belgium: '🇧🇪',
-  Benin: '🇧🇯',
-  Bolivia: '🇧🇴',
-  Botswana: '🇧🇼',
-  Bulgaria: '🇧🇬',
-  'Burkina Faso': '🇧🇫',
-  Cambodia: '🇰🇭',
-  Cameroon: '🇨🇲',
-  Canada: '🇨🇦',
-  China: '🇨🇳',
-  'Czech Republic': '🇨🇿',
-  Cyprus: '🇨🇾',
-  Croatia: '🇭🇷',
-  Denmark: '🇩🇰',
-  Djibouti: '🇩🇯',
-  Egypt: '🇪🇬',
-  Estonia: '🇪🇪',
-  Eswatini: '🇸🇿',
-  Ethiopia: '🇪🇹',
-  Finland: '🇫🇮',
-  France: '🇫🇷',
-  Gambia: '🇬🇲',
-  Germany: '🇩🇪',
-  Ghana: '🇬🇭',
-  Greece: '🇬🇷',
-  'Hong Kong': '🇭🇰',
-  Hungary: '🇭🇺',
-  Iceland: '🇮🇸',
-  India: '🇮🇳',
-  Indonesia: '🇮🇩',
-  Iraq: '🇮🇶',
-  Ireland: '🇮🇪',
-  Israel: '🇮🇱',
-  Italy: '🇮🇹',
-  'Ivory Coast': '🇨🇮',
-  Japan: '🇯🇵',
-  Jordan: '🇯🇴',
-  Kazakhstan: '🇰🇿',
-  Kenya: '🇰🇪',
-  Kuwait: '🇰🇼',
-  Kyrgyzstan: '🇰🇬',
-  Laos: '🇱🇦',
-  Latvia: '🇱🇻',
-  Lesotho: '🇱🇸',
-  Liberia: '🇱🇷',
-  Lithuania: '🇱🇹',
-  Luxembourg: '🇱🇺',
-  Macau: '🇲🇴',
-  Malaysia: '🇲🇾',
-  Mali: '🇲🇱',
-  Malta: '🇲🇹',
-  Morocco: '🇲🇦',
-  Myanmar: '🇲🇲',
-  Namibia: '🇳🇦',
-  Nepal: '🇳🇵',
-  Netherlands: '🇳🇱',
-  'New Zealand': '🇳🇿',
-  Niger: '🇳🇪',
-  Nigeria: '🇳🇬',
-  Norway: '🇳🇴',
-  Pakistan: '🇵🇰',
-  Philippines: '🇵🇭',
-  Poland: '🇵🇱',
-  Portugal: '🇵🇹',
-  Qatar: '🇶🇦',
-  Romania: '🇷🇴',
-  Russia: '🇷🇺',
-  Rwanda: '🇷🇼',
-  'Saudi Arabia': '🇸🇦',
-  Senegal: '🇸🇳',
-  Singapore: '🇸🇬',
-  Slovakia: '🇸🇰',
-  Slovenia: '🇸🇮',
-  Somalia: '🇸🇴',
-  'South Africa': '🇿🇦',
-  'South Korea': '🇰🇷',
-  Spain: '🇪🇸',
-  Sudan: '🇸🇩',
-  'South Sudan': '🇸🇸',
-  'Sri Lanka': '🇱🇰',
-  Sweden: '🇸🇪',
-  Switzerland: '🇨🇭',
-  Tajikistan: '🇹🇯',
-  Thailand: '🇹🇭',
-  Togo: '🇹🇬',
-  Tunisia: '🇹🇳',
-  Turkey: '🇹🇷',
-  Turkmenistan: '🇹🇲',
-  Uganda: '🇺🇬',
-  Ukraine: '🇺🇦',
-  UK: '🇬🇧',
-  'United Kingdom': '🇬🇧',
-  'United States': '🇺🇸',
-  Uzbekistan: '🇺🇿',
-  Vietnam: '🇻🇳',
-  Zambia: '🇿🇲',
-  Zimbabwe: '🇿🇼',
+  Afghanistan: "🇦🇫",
+  Algeria: "🇩🇿",
+  Argentina: "🇦🇷",
+  Australia: "🇦🇺",
+  Austria: "🇦🇹",
+  Bahrain: "🇧🇭",
+  Bangladesh: "🇧🇩",
+  Belarus: "🇧🇾",
+  Belgium: "🇧🇪",
+  Benin: "🇧🇯",
+  Bolivia: "🇧🇴",
+  Botswana: "🇧🇼",
+  Bulgaria: "🇧🇬",
+  'Burkina Faso': "🇧🇫",
+  Cambodia: "🇰🇭",
+  Cameroon: "🇨🇲",
+  Canada: "🇨🇦",
+  China: "🇨🇳",
+  'Czech Republic': "🇨🇿",
+  Cyprus: "🇨🇾",
+  Croatia: "🇭🇷",
+  Denmark: "🇩🇰",
+  Djibouti: "🇩🇯",
+  Egypt: "🇪🇬",
+  Estonia: "🇪🇪",
+  Eswatini: "🇸🇿",
+  Ethiopia: "🇪🇹",
+  Finland: "🇫🇮",
+  France: "🇫🇷",
+  Gambia: "🇬🇲",
+  Germany: "🇩🇪",
+  Ghana: "🇬🇭",
+  Greece: "🇬🇷",
+  'Hong Kong': "🇭🇰",
+  Hungary: "🇭🇺",
+  Iceland: "🇮🇸",
+  India: "🇮🇳",
+  Indonesia: "🇮🇩",
+  Iraq: "🇮🇶",
+  Ireland: "🇮🇪",
+  Israel: "🇮🇱",
+  Italy: "🇮🇹",
+  'Ivory Coast': "🇨🇮",
+  Japan: "🇯🇵",
+  Jordan: "🇯🇴",
+  Kazakhstan: "🇰🇿",
+  Kenya: "🇰🇪",
+  Kuwait: "🇰🇼",
+  Kyrgyzstan: "🇰🇬",
+  Laos: "🇱🇦",
+  Latvia: "🇱🇻",
+  Lesotho: "🇱🇸",
+  Liberia: "🇱🇷",
+  Lithuania: "🇱🇹",
+  Luxembourg: "🇱🇺",
+  Macau: "🇲🇴",
+  Malaysia: "🇲🇾",
+  Mali: "🇲🇱",
+  Malta: "🇲🇹",
+  Morocco: "🇲🇦",
+  Myanmar: "🇲🇲",
+  Namibia: "🇳🇦",
+  Nepal: "🇳🇵",
+  Netherlands: "🇳🇱",
+  'New Zealand': "🇳🇿",
+  Niger: "🇳🇪",
+  Nigeria: "🇳🇬",
+  Norway: "🇳🇴",
+  Pakistan: "🇵🇰",
+  Philippines: "🇵🇭",
+  Poland: "🇵🇱",
+  Portugal: "🇵🇹",
+  Qatar: "🇶🇦",
+  Romania: "🇷🇴",
+  Russia: "🇷🇺",
+  Rwanda: "🇷🇼",
+  'Saudi Arabia': "🇸🇦",
+  Senegal: "🇸🇳",
+  Singapore: "🇸🇬",
+  Slovakia: "🇸🇰",
+  Slovenia: "🇸🇮",
+  Somalia: "🇸🇴",
+  'South Africa': "🇿🇦",
+  'South Korea': "🇰🇷",
+  Spain: "🇪🇸",
+  Sudan: "🇸🇩",
+  'South Sudan': "🇸🇸",
+  'Sri Lanka': "🇱🇰",
+  Sweden: "🇸🇪",
+  Switzerland: "🇨🇭",
+  Tajikistan: "🇹🇯",
+  Thailand: "🇹🇭",
+  Togo: "🇹🇬",
+  Tunisia: "🇹🇳",
+  Turkey: "🇹🇷",
+  Turkmenistan: "🇹🇲",
+  Uganda: "🇺🇬",
+  Ukraine: "🇺🇦",
+  UK: "🇬🇧",
+  'United Kingdom': "🇬🇧",
+  'United States': "🇺🇸",
+  Uzbekistan: "🇺🇿",
+  Vietnam: "🇻🇳",
+  Zambia: "🇿🇲",
+  Zimbabwe: "🇿🇼",
 };
 
 const getFlag = (name) => {
@@ -443,9 +443,7 @@ export default function PassportApp() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center cursor-pointer" onClick={() => navigate('home')}>
-            <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center mr-2">
-              <Camera className="text-white h-5 w-5" />
-            </div>
+            <img src="/logo.png" alt="QuickPass" className="h-9 w-auto mr-2" />
             <span className="font-bold text-xl text-slate-900 tracking-tight">QuickPass</span>
           </div>
 
@@ -723,17 +721,21 @@ export default function PassportApp() {
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setCurrentPhoto(reader.result);
-          setSizePresetId((prev) => prev || getDefaultPresetForService(selectedService?.id));
-          navigate('editor');
-        };
-        reader.readAsDataURL(file);
-      }
-      setPendingUploadPrompt(false);
-    };
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCurrentPhoto(reader.result);
+        setSizePresetId((prev) => prev || getDefaultPresetForService(selectedService?.id));
+        setCaptureMode('upload');
+        stopCamera();
+        navigate('editor');
+      };
+      reader.readAsDataURL(file);
+    }
+    // Allow selecting the same file again
+    if (e.target) e.target.value = '';
+    setPendingUploadPrompt(false);
+  };
 
     useEffect(() => {
       if (stream && videoRef.current) {
@@ -1451,7 +1453,7 @@ export default function PassportApp() {
           <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-8">
             <div className="col-span-1">
               <div className="flex items-center text-white font-bold text-xl mb-4">
-                <Camera className="mr-2 h-6 w-6 text-blue-500" /> QuickPass
+                <img src="/logo%20white.png" alt="QuickPass" className="h-10 w-auto mr-2" /> QuickPass
               </div>
               <p className="text-sm">Trusted by 50,000+ travelers for compliant passport and visa photos.</p>
             </div>
@@ -1486,3 +1488,5 @@ export default function PassportApp() {
     </div>
   );
 }
+
+
