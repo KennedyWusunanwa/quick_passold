@@ -883,11 +883,12 @@ export default function PassportApp() {
     );
   };
   const EditorView = () => {
-  const updateSetting = (key, val) => {
-    setEditSettings((prev) => ({ ...prev, [key]: val }));
-  };
-  const updateSettingLive = (key) => (e) => {
-    const raw = e.target.value;
+    const countryInputRef = useRef(null);
+    const updateSetting = (key, val) => {
+      setEditSettings((prev) => ({ ...prev, [key]: val }));
+    };
+    const updateSettingLive = (key) => (e) => {
+      const raw = e.target.value;
     const parsed = key === 'zoom' ? parseFloat(raw) : parseInt(raw, 10);
     updateSetting(key, parsed);
   };
@@ -901,6 +902,12 @@ export default function PassportApp() {
     ? matchingPreset.countries.find((c) => normalizeCountry(c) === normalizedQuery) || matchingPreset.countries[0]
     : null;
   const matchedFlag = matchedCountry ? getFlag(matchedCountry) : '';
+
+  useEffect(() => {
+    if (matchingPreset && matchingPreset.id !== sizePresetId) {
+      setSizePresetId(matchingPreset.id);
+    }
+  }, [matchingPreset, sizePresetId]);
 
     return (
       <div className="min-h-screen bg-slate-50 pt-8 pb-20">
@@ -1056,8 +1063,14 @@ export default function PassportApp() {
               <div>
                 <label className="text-sm font-medium text-slate-700 block mb-2">Country (auto finds size)</label>
                 <input
+                  ref={countryInputRef}
                   value={countryQuery}
-                  onChange={(e) => setCountryQuery(e.target.value)}
+                  onChange={(e) => {
+                    setCountryQuery(e.target.value);
+                    requestAnimationFrame(() => countryInputRef.current?.focus());
+                  }}
+                  autoComplete="off"
+                  spellCheck={false}
                   placeholder="Type a country, e.g. Spain"
                   className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                 />
