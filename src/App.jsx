@@ -310,6 +310,21 @@ export default function PassportApp() {
     return w / h;
   };
 
+  const getPresetPixels = (presetId) => {
+    const preset = SIZE_PRESETS.find((p) => p.id === presetId);
+    if (!preset) return { width: 600, height: 800 };
+    const nums = preset.label.match(/[\d.]+/g);
+    if (!nums || nums.length < 2) return { width: 600, height: 800 };
+    const w = parseFloat(nums[0]);
+    const h = parseFloat(nums[1]);
+    // Use 300 DPI; convert mm to inches where needed
+    if (preset.label.includes('in')) {
+      return { width: Math.round(w * 300), height: Math.round(h * 300) };
+    }
+    const mmToInch = (mm) => mm / 25.4;
+    return { width: Math.round(mmToInch(w) * 300), height: Math.round(mmToInch(h) * 300) };
+  };
+
   const handleServiceSelect = (service, targetView = 'capture', mode = 'camera', autoUpload = false) => {
     setSelectedService(service);
     setSizePresetId(service?.sizePresetId || getDefaultPresetForService(service?.id));
@@ -348,34 +363,28 @@ export default function PassportApp() {
     return new Promise((resolve) => {
       const img = new Image();
       img.onload = () => {
+        const { width: targetW, height: targetH } = getPresetPixels(sizePresetId || getDefaultPresetForService(selectedService?.id));
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
 
-        // Set canvas to original image dimensions
-        canvas.width = img.width;
-        canvas.height = img.height;
+        canvas.width = targetW;
+        canvas.height = targetH;
 
-        // Fill background white (standard for passports) just in case
         ctx.fillStyle = '#FFFFFF';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillRect(0, 0, targetW, targetH);
 
-        // Center point
-        const cx = canvas.width / 2;
-        const cy = canvas.height / 2;
+        const baseScale = Math.max(targetW / img.width, targetH / img.height);
+        const totalScale = baseScale * editSettings.zoom;
 
-        // Apply transformations
-        ctx.translate(cx + editSettings.offsetX, cy + editSettings.offsetY);
+        ctx.save();
+        ctx.translate(targetW / 2 + editSettings.offsetX, targetH / 2 + editSettings.offsetY);
         ctx.rotate((editSettings.rotate * Math.PI) / 180);
-        ctx.scale(editSettings.zoom, editSettings.zoom);
-        ctx.translate(-cx, -cy);
-
-        // Apply Brightness via filter
+        ctx.scale(totalScale, totalScale);
         ctx.filter = `brightness(${editSettings.brightness}%)`;
+        ctx.drawImage(img, -img.width / 2, -img.height / 2);
+        ctx.restore();
 
-        // Draw image
-        ctx.drawImage(img, 0, 0);
-
-        resolve(canvas.toDataURL('image/jpeg', 0.9));
+        resolve(canvas.toDataURL('image/jpeg', 0.92));
       };
       img.src = currentPhoto;
     });
@@ -721,6 +730,7 @@ export default function PassportApp() {
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (!selectedService) setSelectedService(SERVICES[0]);
       const reader = new FileReader();
       reader.onloadend = () => {
         setCurrentPhoto(reader.result);
