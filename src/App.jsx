@@ -918,11 +918,10 @@ export default function PassportApp() {
     ? matchingPreset.countries.find((c) => normalizeCountry(c) === normalizedQuery) || matchingPreset.countries[0]
     : null;
   const matchedFlag = matchedCountry ? getFlag(matchedCountry) : '';
-    const [showSuggestions, setShowSuggestions] = useState(false);
-
     const filteredSuggestions = countryQuery
       ? COUNTRY_OPTIONS.filter((opt) => opt.key.includes(normalizeCountry(countryQuery))).slice(0, 8)
       : COUNTRY_OPTIONS.slice(0, 8);
+    const showSuggestions = countryQuery.trim().length > 0 && filteredSuggestions.length > 0;
 
     useEffect(() => {
       if (matchingPreset && matchingPreset.id !== sizePresetId) {
@@ -1088,16 +1087,20 @@ export default function PassportApp() {
                   value={countryQuery}
                   onChange={(e) => {
                     setCountryQuery(e.target.value);
-                    setShowSuggestions(true);
                   }}
-                  onFocus={() => setShowSuggestions(true)}
-                  onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+                  type="search"
+                  inputMode="search"
                   autoComplete="off"
+                  autoCorrect="off"
                   spellCheck={false}
+                  data-lpignore="true"
+                  data-1p-ignore="true"
+                  data-bwignore="true"
+                  data-form-type="other"
                   placeholder="Type a country, e.g. Spain"
                   className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                 />
-                {showSuggestions && filteredSuggestions.length > 0 && (
+                {showSuggestions && (
                   <div className="absolute z-20 mt-1 w-full max-h-56 overflow-y-auto bg-white border border-slate-200 rounded-lg shadow-md text-sm">
                     {filteredSuggestions.map((opt) => (
                       <button
@@ -1107,8 +1110,6 @@ export default function PassportApp() {
                         onClick={() => {
                           setCountryQuery(opt.country);
                           setSizePresetId(opt.presetId);
-                          setShowSuggestions(false);
-                          requestAnimationFrame(() => countryInputRef.current?.blur());
                         }}
                       >
                         <span className="flex items-center gap-2">
