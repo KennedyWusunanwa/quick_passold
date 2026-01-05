@@ -240,7 +240,6 @@ export default function PassportApp() {
   const [countryQuery, setCountryQuery] = useState('');
   const [lastOrderId, setLastOrderId] = useState(null);
   const [captureMode, setCaptureMode] = useState('camera'); // camera | upload
-  const [pendingUploadPrompt, setPendingUploadPrompt] = useState(false);
 
   // Editor State
   const [editSettings, setEditSettings] = useState({ zoom: 1, rotate: 0, brightness: 100, offsetX: 0, offsetY: 0 });
@@ -325,17 +324,15 @@ export default function PassportApp() {
     return { width: Math.round(mmToInch(w) * 300), height: Math.round(mmToInch(h) * 300) };
   };
 
-  const handleServiceSelect = (service, targetView = 'capture', mode = 'camera', autoUpload = false) => {
+  const handleServiceSelect = (service, targetView = 'capture', mode = 'camera') => {
     setSelectedService(service);
     setSizePresetId(service?.sizePresetId || getDefaultPresetForService(service?.id));
     setCaptureMode(mode);
-    setPendingUploadPrompt(autoUpload && mode === 'upload');
     navigate(targetView);
   };
 
-  const goToCapture = (mode = 'camera', autoUpload = false) => {
+  const goToCapture = (mode = 'camera') => {
     setCaptureMode(mode);
-    setPendingUploadPrompt(autoUpload && mode === 'upload');
     navigate('capture');
   };
 
@@ -631,7 +628,7 @@ export default function PassportApp() {
                   Start with {preset.label}
                 </button>
                 <button
-                  onClick={() => handleServiceSelect({ ...SERVICES[0], sizePresetId: preset.id }, 'capture', 'upload', true)}
+                  onClick={() => handleServiceSelect({ ...SERVICES[0], sizePresetId: preset.id }, 'capture', 'upload')}
                   className="mt-2 inline-flex items-center justify-center px-4 py-3 rounded-lg bg-white text-blue-700 border border-blue-200 text-sm font-semibold hover:bg-blue-50"
                 >
                   Upload for {preset.label}
@@ -743,7 +740,6 @@ export default function PassportApp() {
     }
     // Allow selecting the same file again
     if (e.target) e.target.value = '';
-    setPendingUploadPrompt(false);
   };
 
     useEffect(() => {
@@ -770,22 +766,11 @@ export default function PassportApp() {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [captureMode]);
 
-    useEffect(() => {
-      if (captureMode === 'upload' && pendingUploadPrompt && fileInputRef.current) {
-        fileInputRef.current.click();
-        setPendingUploadPrompt(false);
-      } else if (captureMode !== 'upload' && pendingUploadPrompt) {
-        setPendingUploadPrompt(false);
-      }
-    }, [captureMode, pendingUploadPrompt]);
-
     const switchToCamera = () => {
-      setPendingUploadPrompt(false);
       setCaptureMode('camera');
     };
     const switchToUpload = () => {
       setCaptureMode('upload');
-      setPendingUploadPrompt(true);
     };
 
     return (
