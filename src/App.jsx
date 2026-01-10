@@ -8,11 +8,13 @@ import {
   User,
   Download,
   CreditCard,
+  ChevronLeft,
   ChevronRight,
   LayoutDashboard,
   Settings,
   Image as ImageIcon,
   RotateCw,
+  Star,
   ZoomIn,
   Sun,
 } from 'lucide-react';
@@ -25,6 +27,33 @@ const SERVICES = [
   { id: 'uk-passport', name: 'UK Passport Photo', price: 12.99, type: 'Digital Code', desc: '35x45mm, Light Grey Background', sizePresetId: '35x45' },
   { id: 'eu-visa', name: 'Schengen Visa', price: 12.99, type: 'Digital', desc: '35x45mm, White Background', sizePresetId: '35x45' },
   { id: 'jp-visa', name: 'Japan Visa', price: 14.99, type: 'Digital', desc: '45x45mm, White Background', sizePresetId: '45x45' },
+];
+
+const TESTIMONIALS = [
+  {
+    id: 'mia-thompson',
+    name: 'Mia Thompson',
+    location: 'Austin, TX',
+    quote: 'I uploaded a phone photo on my lunch break and had a compliant 2x2 ready in minutes. Accepted on the first try.',
+    context: 'US passport renewal',
+    image: 'https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=facearea&w=160&h=160&q=80',
+  },
+  {
+    id: 'daniel-ortiz',
+    name: 'Daniel Ortiz',
+    location: 'Toronto, ON',
+    quote: 'The Canada 50x70 option was spot on. Print layout looked professional and saved me a same-day studio visit.',
+    context: 'Canada passport print',
+    image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=facearea&w=160&h=160&q=80',
+  },
+  {
+    id: 'priya-nair',
+    name: 'Priya Nair',
+    location: 'Dubai, UAE',
+    quote: 'The background cleanup and crop were perfect for my visa. Fast, simple, and the sizing guide was clear.',
+    context: 'Schengen visa',
+    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=facearea&w=160&h=160&q=80',
+  },
 ];
 
 // Country-driven passport size presets
@@ -287,6 +316,7 @@ export default function PassportApp() {
   const [countryQuery, setCountryQuery] = useState('');
   const [lastOrderId, setLastOrderId] = useState(null);
   const [captureMode, setCaptureMode] = useState('camera'); // camera | upload
+  const pricingScrollRef = useRef(null);
 
   // Editor State
   const [editSettings, setEditSettings] = useState({ zoom: 1, rotate: 0, brightness: 100, offsetX: 0, offsetY: 0 });
@@ -399,6 +429,13 @@ export default function PassportApp() {
       const el = document.getElementById(id);
       if (el) el.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const scrollPricingGrid = (direction) => {
+    const scroller = pricingScrollRef.current;
+    if (!scroller) return;
+    const scrollAmount = Math.round(scroller.clientWidth * 0.85);
+    scroller.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
   };
 
   const generateProcessedImage = async () => {
@@ -651,10 +688,33 @@ export default function PassportApp() {
       {/* Pricing by Size */}
       <section id="pricing" className="py-20 bg-white scroll-mt-16">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center text-slate-900 mb-12">Global Pricing by Size</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="relative mb-12">
+            <h2 className="text-3xl font-bold text-center text-slate-900">Global Pricing by Size</h2>
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => scrollPricingGrid('left')}
+                className="h-10 w-10 rounded-full border border-slate-200 text-slate-600 hover:text-slate-900 hover:border-slate-300 flex items-center justify-center"
+                aria-label="Scroll pricing left"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollPricingGrid('right')}
+                className="h-10 w-10 rounded-full border border-slate-200 text-slate-600 hover:text-slate-900 hover:border-slate-300 flex items-center justify-center"
+                aria-label="Scroll pricing right"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
+          <div
+            ref={pricingScrollRef}
+            className="flex gap-6 overflow-x-auto pb-2 scroll-smooth snap-x snap-mandatory"
+          >
             {SIZE_PRESETS.map((preset) => (
-              <div key={preset.id} className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col">
+              <div key={preset.id} className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col flex-none w-[280px] sm:w-[320px] lg:w-[340px] snap-start">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-xl font-bold text-slate-900">{preset.label}</h3>
                   <span className="text-xs text-slate-500">From $12.99</span>
@@ -683,6 +743,24 @@ export default function PassportApp() {
               </div>
             ))}
           </div>
+          <div className="mt-4 flex justify-end gap-2 sm:hidden">
+            <button
+              type="button"
+              onClick={() => scrollPricingGrid('left')}
+              className="h-10 w-10 rounded-full border border-slate-200 text-slate-600 hover:text-slate-900 hover:border-slate-300 flex items-center justify-center"
+              aria-label="Scroll pricing left"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollPricingGrid('right')}
+              className="h-10 w-10 rounded-full border border-slate-200 text-slate-600 hover:text-slate-900 hover:border-slate-300 flex items-center justify-center"
+              aria-label="Scroll pricing right"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          </div>
         </div>
       </section>
 
@@ -705,6 +783,45 @@ export default function PassportApp() {
                 </div>
                 <h3 className="text-xl font-bold mb-3">{step.title}</h3>
                 <p className="text-slate-500 max-w-xs">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section id="testimonials" className="py-20 bg-slate-50 scroll-mt-16">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between mb-12">
+            <div>
+              <p className="text-sm font-semibold text-blue-600 uppercase tracking-wide">Testimonials</p>
+              <h2 className="text-3xl font-bold text-slate-900 mt-2">Trusted by travelers worldwide</h2>
+            </div>
+            <p className="text-slate-500 max-w-xl">
+              Real feedback from customers who needed compliant passport and visa photos fast.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {TESTIMONIALS.map((item) => (
+              <div key={item.id} className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm flex flex-col">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={item.image}
+                    alt={`${item.name} testimonial`}
+                    className="h-12 w-12 rounded-full object-cover border border-slate-200"
+                  />
+                  <div>
+                    <div className="font-semibold text-slate-900">{item.name}</div>
+                    <div className="text-xs text-slate-500">{item.location}</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1 mt-4 text-amber-400">
+                  {Array.from({ length: 5 }).map((_, idx) => (
+                    <Star key={`${item.id}-star-${idx}`} className="h-4 w-4 fill-current" />
+                  ))}
+                </div>
+                <p className="text-slate-600 mt-4">"{item.quote}"</p>
+                <div className="mt-4 text-xs font-semibold text-slate-500 uppercase tracking-wide">{item.context}</div>
               </div>
             ))}
           </div>
